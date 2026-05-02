@@ -1,0 +1,164 @@
+/* ===== FOND ===== */
+body {
+    min-height: 100vh;
+    margin: 0;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', sans-serif;
+    padding: 2rem 1rem;
+}
+
+/* ===== TITRE ===== */
+.ttt-title {
+    color: #e2e8f0;
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+/* ===== STATUT (tour / victoire) ===== */
+.ttt-status {
+    color: #94a3b8;
+    font-size: 1rem;
+    text-align: center;
+    min-height: 1.5rem;
+    margin-bottom: 2rem;
+}
+.ttt-status.victoire {
+    color: #fbbf24;
+    font-weight: 700;
+    font-size: 1.3rem;
+}
+
+/* ===== EFFET 3D : conteneur de perspective ===== */
+.ttt-scene {
+    perspective: 800px;
+    margin-bottom: 2rem;
+}
+
+/* ===== GRILLE ===== */
+.ttt-board {
+    border-collapse: separate;
+    border-spacing: 0;
+    transform: rotateX(18deg) rotateZ(-1deg);
+    transform-style: preserve-3d;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow:
+        0 40px 80px rgba(0, 0, 0, 0.6),
+        0 20px 40px rgba(15, 52, 96, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* ===== CELLULES ===== */
+.ttt-board td {
+    width: clamp(90px, 25vw, 120px);
+    height: clamp(90px, 25vw, 120px);
+    background: #0d1b2a;
+    border: 2px solid #1e3a5f;
+    text-align: center;
+    vertical-align: middle;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+/* Reflet lumière sur la surface */
+.ttt-board td::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+.ttt-board td:hover {
+    background: #1a2f45;
+}
+
+/* Séparateurs bleus en relief */
+.ttt-board td:not(:last-child) {
+    border-right: 3px solid #2563eb;
+}
+.ttt-board tr:not(:last-child) td {
+    border-bottom: 3px solid #2563eb;
+}
+
+/* ===== BOUTONS DANS LES CASES VIDES ===== */
+.ttt-board td form,
+.ttt-board td a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.ttt-board td button[type="submit"] {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    border-radius: 0;
+}
+.ttt-board td button[type="submit"]:hover {
+    background: rgba(37, 99, 235, 0.1);
+}
+
+/* ===== SYMBOLES X et O ===== */
+.ttt-board td p {
+    font-size: clamp(2.5rem, 8vw, 4rem);
+    font-weight: 800;
+    margin: 0;
+    line-height: 1;
+}
+
+/* X = rouge, O = bleu — à adapter selon votre logique */
+.ttt-board td p.mark-x {
+    color: #ef4444;
+    text-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+}
+.ttt-board td p.mark-o {
+    color: #3b82f6;
+    text-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+}
+
+/* ===== BOUTON RÉINITIALISER ===== */
+.ttt-reset form {
+    margin-top: 1.5rem;
+}
+.ttt-reset button {
+    padding: 0.75rem 2.5rem;
+    border-radius: 50px;
+    border: none;
+    background: #2563eb;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4);
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+.ttt-reset button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(37, 99, 235, 0.5);
+}
+.ttt-reset button:active {
+    transform: translateY(0);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 400px) {
+    .ttt-scene { perspective: 500px; }
+    .ttt-board { transform: rotateX(12deg) rotateZ(0deg); }
+}
