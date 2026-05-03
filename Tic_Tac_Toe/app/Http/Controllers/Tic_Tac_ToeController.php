@@ -6,11 +6,7 @@ use Illuminate\Http\Request;
 
 class Tic_Tac_ToeController extends Controller
 {
-    public function innit(){
-        session([
-            "a_commence"=>true,
-            "dernier_signe"=>"O",
-            "case"=>[
+    private $case=[
                 [
                     "case1"=>[false," "] ,
                     "case2"=>[false," "] ,
@@ -28,61 +24,120 @@ class Tic_Tac_ToeController extends Controller
                     "case8"=>[false," "] ,
                     "case9"=>[false," "]  
                 ]
-            
-            ],
-            'gagne'=>'En cours'
-        ]);
+            ];
+
+    public function innit(){
+        return view('tic_tac_toe.mode');
     }
 
     public function index(){
-        if(!session()->has("a_commence")){
-            $this->innit();
+        if(!session()->has("mode")){
+            return $this->innit();
         }
 
         $case=session('case');
         $gagne=session('gagne');
+        
         return view('tic_tac_toe.index',compact('case','gagne'));
     }
 
+    public function mode(Request $request){
+        session([
+            "mode"=>$request->mode,
+            "choix"=>$request->dernier_signe,
+            "dernier_signe"=>$request->dernier_signe,
+            "nbTour"=>1,
+            "case"=>$this->case,
+            'gagne'=>'En cours'
+        ]);
+
+        return redirect()->route('jeu.index');
+    }
+
     public function marquer(Request $request){
-        $d_s=session('dernier_signe');
-        $dernier_signe= $d_s=="O" ? 'X':'O';
-        session(["dernier_signe"=>$dernier_signe]);
-        $case=session('case');
-        
-        if($request->case=='case1' || $request->case=='case2' || $request->case=='case3'){
-            $case[0][$request->case]=[true,$dernier_signe];
-        
-            session(['case'=>$case]);
+        $case = session('case');
 
+        
+
+        switch(session('mode')){
+            case "1": {
+
+                $d_s = session('choix');
+
+                if(in_array($request->case, ['case1','case2','case3'])){
+                    $case[0][$request->case] = [true, $d_s];
+                }
+                elseif(in_array($request->case, ['case4','case5','case6'])){
+                    $case[1][$request->case] = [true, $d_s];
+                }
+                else{
+                    $case[2][$request->case] = [true, $d_s];
+                }
+
+                session(['case' => $case]);
+                $this->gagner($d_s);
+
+                if(session('gagne') !== "En cours"){
+                    break;
+                }
+
+                $ia = $d_s == "X" ? "O" : "X";
+
+                $played = false;
+                foreach($case as $li => $col){
+                    foreach($col as $key => $value){
+                        if($value[0] == false){ // case vide
+                            $case[$li][$key] = [true, $ia];
+                            $played = true;
+                            break;
+                        }
+                    }
+                    if($played) break;
+                }
+
+                
+                session(['case' => $case]);
+                $this->gagner($ia);
+
+                break;
+            }
+
+            case "2": {
+                $d_s = session("nbTour") == 1 
+                ? session('choix') 
+                : session('dernier_signe');
+
+                if(in_array($request->case, ['case1','case2','case3'])){
+                    $case[0][$request->case] = [true, $d_s];
+                }
+                elseif(in_array($request->case, ['case4','case5','case6'])){
+                    $case[1][$request->case] = [true, $d_s];
+                }
+                else{
+                    $case[2][$request->case] = [true, $d_s];
+                }
+
+                session(['case' => $case]);
+
+                
+                $this->gagner($d_s);
+
+                
+                $dernier_signe = $d_s == "X" ? "O" : "X";
+                session(['dernier_signe' => $dernier_signe]);
+
+                break;
+            }
         }
 
-        else if($request->case=='case4' || $request->case=='case5' || $request->case=='case6'){
-            $case[1][$request->case]=[true,$dernier_signe];
-            
-            session(['case'=>$case]);
-
-            
-        }
-
-        else{
-            $case[2][$request->case]=[true,$dernier_signe];
-            session(['case'=>$case]);
-        }
-        
-        $this->gagner();
+        session(['nbTour' => session("nbTour") + 1]);
 
         return redirect()->route('jeu.index');
-
     }
 
-    public function reinitialiser(){
-        $this->innit();
 
-        return redirect()->route('jeu.index');
-    }
-
-    public function gagner(){
+    
+    public function gagner($d_s){
         $case=session('case');
         $case1=$case[0]['case1'];
         $case2=$case[0]['case2'];
@@ -153,7 +208,7 @@ class Tic_Tac_ToeController extends Controller
     )
 
         {
-            session(["gagne"=>"Victoire"]);
+            session(["gagne"=>"Victoire de $d_s"]);
             return;
         }
 
@@ -164,5 +219,13 @@ class Tic_Tac_ToeController extends Controller
 
         $egalite? session(["gagne"=>"Egalité"]):session(["gagne"=>"En cours"]);
     }
+
+    public function reinitialiser(){
+        session(['gagne'=>"En cours"]);
+        session(['dernier_signe'=>session('choix')]);
+        session(['case'=>$this->case]);
+        return redirect()->route('jeu.index');
+    }
+
     
 }

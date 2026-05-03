@@ -13,12 +13,11 @@ use App\Http\Controllers\Tic_Tac_ToeController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
 Route::controller(Tic_Tac_ToeController::class)->group(function(){
+    Route::get('/','innit' )->name('jeu.depart');
     Route::get('jeu/index','index')->name('jeu.index');
     Route::post('jeu/marquer','marquer')->name('jeu.marquer');
     Route::post('jeu/reinitialiser','reinitialiser')->name('jeu.reinitialiser');
+    Route::post('jeu/mode','mode')->name('jeu.mode');
 });

@@ -10,11 +10,12 @@
 
     <h1 class="ttt-title">Tic Tac Toe</h1>
 
-    <p class="ttt-status {{ $gagne === 'Victoire' ? 'victoire' : '' }}">
+
+    <p class="ttt-status {{ str_contains($gagne,'Victoire') ? 'victoire' : '' }}">
         {{ $gagne }}
     </p>
 
-    @if($gagne !== 'Victoire')
+    @if(!str_contains($gagne,"Victoire"))
     <div class="ttt-scene">
         <table class="ttt-board">
             @for($i = 0; $i < 3; $i++)
@@ -27,7 +28,6 @@
                             <button type="submit" name="case" value="{{ $key }}"></button>
                         </form>
                     @else
-                        {{-- Ajoutez mark-x ou mark-o selon votre logique --}}
                         <p class="mark-{{ strtolower($value[1]) }}">{{ $value[1] }}</p>
                     @endif
                 </td>
@@ -43,6 +43,9 @@
             @csrf
             <button type="submit">↺ Réinitialiser</button>
         </form>
+        <a href="{{ route('jeu.depart') }}">
+            <button>Changer Mode</button>
+        </a>
     </div>
 
 </body>

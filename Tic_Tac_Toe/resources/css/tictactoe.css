@@ -122,7 +122,6 @@ body {
     line-height: 1;
 }
 
-/* X = rouge, O = bleu — à adapter selon votre logique */
 .ttt-board td p.mark-x {
     color: #ef4444;
     text-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
@@ -132,10 +131,16 @@ body {
     text-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
 }
 
-/* ===== BOUTON RÉINITIALISER ===== */
-.ttt-reset form {
+/* ===== BOUTONS RESET / NAVIGATION ===== */
+.ttt-reset {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
     margin-top: 1.5rem;
 }
+.ttt-reset form { margin: 0; }
+.ttt-reset a { text-decoration: none; }
 .ttt-reset button {
     padding: 0.75rem 2.5rem;
     border-radius: 50px;
@@ -157,8 +162,133 @@ body {
     transform: translateY(0);
 }
 
+/* ===== PAGE MODE DE JEU ===== */
+.ttt-mode-card {
+    background: #0d1b2a;
+    border: 2px solid #1e3a5f;
+    border-radius: 16px;
+    padding: 2.5rem 3rem;
+    width: min(420px, 90vw);
+    box-shadow:
+        0 40px 80px rgba(0, 0, 0, 0.6),
+        0 20px 40px rgba(15, 52, 96, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    margin-bottom: 1rem;
+}
+
+.ttt-mode-subtitle {
+    color: #94a3b8;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-align: center;
+    margin: 0 0 2rem;
+}
+
+.ttt-mode-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.ttt-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.ttt-label {
+    color: #94a3b8;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+/* Select stylisé */
+.ttt-select-wrap {
+    position: relative;
+}
+.ttt-select-wrap::after {
+    content: '▾';
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #2563eb;
+    pointer-events: none;
+    font-size: 1rem;
+}
+.ttt-select {
+    width: 100%;
+    padding: 0.75rem 2.5rem 0.75rem 1rem;
+    background: #1a2f45;
+    color: #e2e8f0;
+    border: 2px solid #1e3a5f;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-family: inherit;
+    appearance: none;
+    cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    outline: none;
+}
+.ttt-select:focus,
+.ttt-select:hover {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+/* Choix du signe X / O */
+.ttt-sign-group {
+    display: flex;
+    gap: 1rem;
+}
+.ttt-sign-option {
+    flex: 1;
+    cursor: pointer;
+}
+.ttt-sign-option input[type="radio"] {
+    display: none;
+}
+.ttt-sign {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 72px;
+    border-radius: 12px;
+    border: 2px solid #1e3a5f;
+    background: #1a2f45;
+    font-size: 2.2rem;
+    font-weight: 800;
+    transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+.ttt-sign-option input[type="radio"]:checked + .ttt-sign {
+    background: #0f2a45;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35);
+}
+.ttt-sign-option input[type="radio"]:checked + .ttt-sign.mark-x {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.3);
+}
+.ttt-sign-option input[type="radio"]:checked + .ttt-sign.mark-o {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+.mark-x {
+    color: #ef4444;
+    text-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+}
+.mark-o {
+    color: #3b82f6;
+    text-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 400px) {
     .ttt-scene { perspective: 500px; }
     .ttt-board { transform: rotateX(12deg) rotateZ(0deg); }
+    .ttt-mode-card { padding: 2rem 1.5rem; }
 }
